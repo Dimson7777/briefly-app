@@ -23,6 +23,12 @@ export default function Auth() {
   }, [mode]);
 
   useEffect(() => {
+    setName('');
+    setEmail('');
+    setPassword('');
+  }, [mode]);
+
+  useEffect(() => {
     if (!loading && user) navigate('/app', { replace: true });
   }, [user, loading, navigate]);
 
@@ -85,20 +91,20 @@ export default function Auth() {
               : 'Free to start. No credit card needed.'}
           </p>
 
-          <form onSubmit={submit} className="mt-6 space-y-4">
+          <form onSubmit={submit} className="mt-6 space-y-4" autoComplete="off">
             {mode === 'signup' && (
               <div className="space-y-1.5">
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Alex Rivera" required />
+                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="" required autoComplete="off" />
               </div>
             )}
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@studio.co" required autoComplete="email" />
+              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="" required autoComplete="off" />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} />
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="" required minLength={6} autoComplete="off" />
             </div>
 
             <Button type="submit" className="w-full" disabled={busy}>
