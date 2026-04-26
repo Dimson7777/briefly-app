@@ -71,16 +71,13 @@ export default function Billing() {
 
     const { error: pErr } = await supabase
       .from('profiles')
-      .update({ plan: 'pro', current_period_end: renewsAt.toISOString() })
-      .eq('id', user.id);
+      .upsert({ id: user.id, plan: 'pro', current_period_end: renewsAt.toISOString() }, { onConflict: 'id' });
 
     if (pErr) {
       setProcessing(false);
       toast({ title: 'Upgrade failed', description: pErr.message, variant: 'destructive' });
       return;
     }
-
-    await qc.invalidateQueries({ queryKey: ['profile'] });
 
     await supabase.from('billing_history').insert({
       user_id: user.id,
@@ -92,9 +89,8 @@ export default function Billing() {
 
     setProcessing(false);
     setCheckoutOpen(false);
-    qc.invalidateQueries({ queryKey: ['profile'] });
-    qc.invalidateQueries({ queryKey: ['billing'] });
-    toast({ title: 'Welcome to Pro', description: 'Demo payment confirmed.' });
+    await qc.invalidateQueries({ queryKey: ['profile'] });
+    window.location.reload();
   };
 
   const cancel = async () => {
