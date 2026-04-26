@@ -80,6 +80,8 @@ export default function Billing() {
       return;
     }
 
+    await qc.invalidateQueries({ queryKey: ['profile'] });
+
     await supabase.from('billing_history').insert({
       user_id: user.id,
       event: 'demo_payment',
