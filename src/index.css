@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light — soft cream editorial */
+    --background: 38 36% 96%;
+    --foreground: 222 30% 12%;
+
+    --surface: 38 40% 98%;
+    --surface-elev: 38 30% 93%;
+    --paper: 40 50% 99%;
+
+    --card: 38 40% 98%;
+    --card-foreground: 222 30% 12%;
+
+    --popover: 40 50% 99%;
+    --popover-foreground: 222 30% 12%;
+
+    /* Electric cyan primary */
+    --primary: 190 92% 42%;
+    --primary-foreground: 38 50% 98%;
+    --primary-glow: 188 95% 55%;
+
+    /* Muted violet detail */
+    --violet: 258 50% 55%;
+    --violet-foreground: 38 50% 98%;
+
+    --secondary: 222 18% 92%;
+    --secondary-foreground: 222 30% 18%;
+
+    --muted: 222 15% 90%;
+    --muted-foreground: 222 12% 42%;
+
+    --accent: 258 50% 55%;
+    --accent-foreground: 38 50% 98%;
+
+    --destructive: 4 78% 52%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 36 92% 48%;
+    --success: 158 64% 38%;
+    --info: 200 88% 48%;
+
+    --border: 222 18% 86%;
+    --input: 222 18% 90%;
+    --ring: 190 92% 42%;
+
+    --radius: 0.5rem;
+
+    /* Status (Briefly) */
+    --status-draft: 222 12% 50%;
+    --status-sent: 200 88% 48%;
+    --status-changes: 36 92% 48%;
+    --status-approved: 158 64% 38%;
+
+    --grid-line: 222 18% 90%;
+
+    --sidebar-background: 38 30% 94%;
+    --sidebar-foreground: 222 25% 22%;
+    --sidebar-primary: 190 92% 42%;
+    --sidebar-primary-foreground: 38 50% 98%;
+    --sidebar-accent: 222 18% 88%;
+    --sidebar-accent-foreground: 222 30% 18%;
+    --sidebar-border: 222 18% 84%;
+    --sidebar-ring: 190 92% 42%;
+  }
+
+  .dark {
+    /* Dark editorial — deep navy + graphite */
+    --background: 222 32% 7%;
+    --foreground: 38 30% 94%;
+
+    --surface: 222 30% 9%;
+    --surface-elev: 222 26% 12%;
+    --paper: 38 28% 95%; /* cream paper for brief preview */
+
+    --card: 222 30% 9%;
+    --card-foreground: 38 30% 94%;
+
+    --popover: 222 32% 8%;
+    --popover-foreground: 38 30% 94%;
+
+    --primary: 188 95% 55%;
+    --primary-foreground: 222 32% 8%;
+    --primary-glow: 188 100% 68%;
+
+    --violet: 258 70% 70%;
+    --violet-foreground: 222 32% 8%;
+
+    --secondary: 222 22% 14%;
+    --secondary-foreground: 38 30% 94%;
+
+    --muted: 222 22% 13%;
+    --muted-foreground: 222 12% 62%;
+
+    --accent: 258 70% 70%;
+    --accent-foreground: 222 32% 8%;
+
+    --destructive: 4 78% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 36 95% 60%;
+    --success: 158 64% 50%;
+    --info: 200 90% 62%;
+
+    --border: 222 22% 17%;
+    --input: 222 22% 14%;
+    --ring: 188 95% 55%;
+
+    --status-draft: 222 12% 60%;
+    --status-sent: 200 90% 62%;
+    --status-changes: 36 95% 60%;
+    --status-approved: 158 64% 50%;
+
+    --grid-line: 222 22% 14%;
+
+    --sidebar-background: 222 35% 5%;
+    --sidebar-foreground: 38 20% 75%;
+    --sidebar-primary: 188 95% 55%;
+    --sidebar-primary-foreground: 222 32% 8%;
+    --sidebar-accent: 222 24% 11%;
+    --sidebar-accent-foreground: 38 30% 94%;
+    --sidebar-border: 222 24% 12%;
+    --sidebar-ring: 188 95% 55%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { font-feature-settings: "ss01", "ss02", "cv11"; }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  ::selection { background: hsl(var(--primary) / 0.35); color: hsl(var(--primary-foreground)); }
+  .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .font-display { font-family: 'Fraunces', Georgia, serif; font-optical-sizing: auto; }
+}
+
+@layer utilities {
+  .grid-bg {
+    background-image:
+      linear-gradient(hsl(var(--grid-line)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--grid-line)) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, black 30%, transparent 80%);
+  }
+  .panel {
+    @apply bg-card border border-border rounded-[var(--radius)];
+  }
+  .panel-elev {
+    @apply bg-[hsl(var(--surface-elev))] border border-border rounded-[var(--radius)];
+    box-shadow: 0 1px 0 hsl(var(--foreground) / 0.03),
+                0 12px 40px -16px hsl(var(--foreground) / 0.25);
+  }
+  .paper {
+    background: hsl(var(--paper));
+    color: hsl(222 30% 12%);
+    box-shadow: 0 1px 0 hsl(0 0% 0% / 0.08),
+                0 30px 80px -30px hsl(0 0% 0% / 0.55);
+  }
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+  .gradient-brand {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--violet)));
+  }
+  .glow-cyan {
+    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.25),
+                0 12px 40px -12px hsl(var(--primary) / 0.45);
+  }
+  .ring-focus {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+  .anim-in {
+    animation: fadeSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 4px; }
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.9); }
+}
+
+.pulse-dot { animation: pulseDot 2.2s ease-in-out infinite; }
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
