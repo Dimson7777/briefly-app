@@ -26,6 +26,12 @@ export default function Auth() {
     setName('');
     setEmail('');
     setPassword('');
+  }, []);
+
+  useEffect(() => {
+    setName('');
+    setEmail('');
+    setPassword('');
   }, [mode]);
 
   useEffect(() => {
@@ -91,20 +97,20 @@ export default function Auth() {
               : 'Free to start. No credit card needed.'}
           </p>
 
-          <form onSubmit={submit} className="mt-6 space-y-4" autoComplete="off">
+          <form key={mode} onSubmit={submit} className="mt-6 space-y-4">
             {mode === 'signup' && (
               <div className="space-y-1.5">
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="" required autoComplete="off" />
+                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Alex Rivera" required autoComplete="new-password" />
               </div>
             )}
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="" required autoComplete="off" />
+              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@studio.co" required autoComplete={mode === 'signup' ? 'new-password' : 'username'} />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="" required minLength={6} autoComplete="off" />
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} />
             </div>
 
             <Button type="submit" className="w-full" disabled={busy}>
