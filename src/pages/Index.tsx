@@ -1,19 +1,96 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  ArrowRight, ArrowUpRight, Check, FileSignature, Sparkles,
-  Send, ScanText, Layers, Command, Printer, GitBranch, Minus,
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  Command,
+  FileSignature,
+  GitBranch,
+  Layers,
+  Printer,
+  ScanText,
+  Send,
+  Sparkles,
+  ShieldCheck,
+  Clock3,
+  BadgeCheck,
+  CircleAlert,
+  Dot,
+  Minus,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
+
+const TRUSTED_NAMES = ['StudioHive', 'PixelPerfect', 'LaunchLab', 'Northbound', 'DesignKit', 'Webflare'];
+
+const WORKFLOW_STEPS = [
+  {
+    n: '01',
+    icon: ScanText,
+    title: 'Paste client notes',
+    desc: 'Drop in the email, transcript, or Slack thread.',
+  },
+  {
+    n: '02',
+    icon: Layers,
+    title: 'Shape the scope',
+    desc: 'Lock deliverables, exclusions, assumptions, revision limits, and timeline.',
+  },
+  {
+    n: '03',
+    icon: Send,
+    title: 'Send a clean brief',
+    desc: 'Share a polished client-facing document and track approval status.',
+  },
+];
+
+const FEATURE_ROWS = [
+  {
+    icon: ScanText,
+    title: 'Notes parser',
+    meta: 'Deterministic',
+    description: 'Turns unstructured client language into scoped sections you can work from.',
+  },
+  {
+    icon: Layers,
+    title: 'Scope builder',
+    meta: 'Editor',
+    description: 'Build deliverables, exclusions, assumptions, timeline, and revision policy in one view.',
+  },
+  {
+    icon: Printer,
+    title: 'Client-facing preview',
+    meta: 'Document',
+    description: 'Generate a clean brief that looks ready for client review and sign-off.',
+  },
+  {
+    icon: GitBranch,
+    title: 'Approval lifecycle',
+    meta: 'Status',
+    description: 'Track draft, sent, needs changes, and approved states across every brief.',
+  },
+  {
+    icon: Command,
+    title: 'Command palette',
+    meta: 'Shortcut',
+    description: 'Jump, create, and navigate quickly with a keyboard-first workflow.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Light and dark theme',
+    meta: 'Theme',
+    description: 'Switch visual modes without changing how your workflows behave.',
+  },
+];
 
 export default function Index() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
-    document.title = 'Briefly — Turn messy client requests into briefs you can actually build from.';
+    document.title = 'Briefly - Turn messy client requests into briefs you can actually build from.';
     const meta = document.querySelector('meta[name="description"]');
     if (meta) {
       meta.setAttribute(
@@ -26,31 +103,43 @@ export default function Index() {
   const ctaTo = user ? '/app' : '/auth';
 
   return (
-    <div className="dark relative min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md gradient-brand">
-              <FileSignature className="h-4 w-4 text-primary-foreground" strokeWidth={2.4} />
+    <div className="dark relative min-h-screen overflow-x-clip bg-background text-foreground">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 grid-bg opacity-45" />
+        <div className="absolute -top-44 left-1/2 h-[34rem] w-[72rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,hsl(var(--primary)/0.24),transparent_62%)] blur-3xl" />
+        <div className="absolute -right-40 top-[30%] h-[22rem] w-[22rem] rounded-full bg-[radial-gradient(circle,hsl(var(--violet)/0.32),transparent_70%)] blur-[120px]" />
+      </div>
+
+      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/75 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+          <Link to="/" className="group flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md gradient-brand shadow-[0_0_0_1px_hsl(var(--primary)/0.4),0_10px_35px_-12px_hsl(var(--primary)/0.8)] transition-transform duration-300 group-hover:scale-105">
+              <FileSignature className="h-4.5 w-4.5 text-primary-foreground" strokeWidth={2.4} />
             </div>
-            <span className="font-display text-lg font-semibold tracking-tight">Briefly</span>
+            <span className="font-display text-[1.15rem] font-semibold tracking-tight">Briefly</span>
           </Link>
 
           <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
-            <a href="#problem" className="transition hover:text-foreground">The problem</a>
+            <a href="#problem" className="transition hover:text-foreground">Problem</a>
             <a href="#workflow" className="transition hover:text-foreground">Workflow</a>
-            <a href="#features" className="transition hover:text-foreground">Features</a>
+            <a href="#features" className="transition hover:text-foreground">Capabilities</a>
             <a href="#pricing" className="transition hover:text-foreground">Pricing</a>
           </nav>
 
           <div className="flex items-center gap-2">
             {user ? (
               <Button size="sm" onClick={() => navigate('/app')}>
-                Open app <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                Open app
+                <ArrowRight className="ml-1 h-3.5 w-3.5" />
               </Button>
             ) : (
               <>
-                <Button size="sm" variant="ghost" onClick={() => navigate('/auth')} className="hidden sm:inline-flex">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => navigate('/auth')}
+                  className="hidden sm:inline-flex"
+                >
                   Sign in
                 </Button>
                 <Button size="sm" onClick={() => navigate('/auth')}>Get started</Button>
@@ -60,253 +149,237 @@ export default function Index() {
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 grid-bg opacity-50" aria-hidden />
-        <div className="absolute -top-40 left-1/2 h-[480px] w-[900px] -translate-x-1/2 rounded-full bg-primary/15 blur-[140px]" aria-hidden />
-        <div className="absolute right-0 top-1/3 h-[280px] w-[420px] rounded-full bg-violet/15 blur-[120px]" aria-hidden />
+      <main className="relative z-10">
+        <section className="relative overflow-hidden">
+          <div className="mx-auto grid max-w-6xl gap-10 px-4 pb-12 pt-12 sm:px-6 sm:pb-14 sm:pt-16 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-7">
+            <div>
+              <Badge
+                variant="outline"
+                className="mb-5 gap-1.5 border-primary/30 bg-primary/10 font-mono text-[10px] uppercase tracking-[0.16em] text-primary"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-primary pulse-dot" />
+                FOR FREELANCERS &amp; SMALL STUDIOS
+              </Badge>
 
-        <div className="relative mx-auto grid max-w-6xl gap-12 px-4 pb-20 pt-16 sm:px-6 sm:pt-24 lg:grid-cols-[1fr_1.05fr] lg:items-center">
-          <div>
-            <Badge variant="outline" className="mb-5 gap-1.5 border-primary/30 bg-primary/5 font-mono text-[10px] uppercase tracking-wider text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary pulse-dot" />
-              For freelancers & small studios
-            </Badge>
-            <h1 className="text-balance font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.4rem]">
-              Turn{' '}
-              <span className="italic text-muted-foreground">messy</span>{' '}
-              client requests into briefs you can actually{' '}
-              <span className="bg-gradient-to-br from-primary to-violet bg-clip-text text-transparent">
-                build from.
-              </span>
-            </h1>
-            <p className="mt-5 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg">
-              Paste the email, the slack thread, the rambling Loom transcript.
-              Briefly turns it into a structured scope — deliverables, exclusions,
-              timeline — ready to send for approval.
-            </p>
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              <Button size="lg" onClick={() => navigate(ctaTo)} className="h-11 px-5">
-                {user ? 'Open Briefly' : 'Start your first brief'}
-                <ArrowRight className="ml-1.5 h-4 w-4" />
-              </Button>
-              <a href="#workflow" className="inline-flex h-11 items-center gap-1.5 rounded-md px-4 text-sm font-medium text-muted-foreground transition hover:text-foreground">
-                See how it works <ArrowUpRight className="h-3.5 w-3.5" />
-              </a>
+              <h1 className="text-balance font-display text-4xl font-semibold leading-[1.02] tracking-tight sm:text-5xl lg:text-[3.52rem]">
+                Turn messy client requests into briefs you can actually build from.
+              </h1>
+
+              <p className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-[1.04rem]">
+                Paste the email, Slack thread, or meeting notes. Briefly turns scattered client input into
+                clear deliverables, exclusions, timelines, and approval-ready scope.
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Button size="lg" onClick={() => navigate(ctaTo)} className="h-11 px-5 shadow-[0_12px_40px_-14px_hsl(var(--primary)/0.9)]">
+                  {user ? 'Open Briefly' : 'Start your first brief'}
+                  <ArrowRight className="ml-1.5 h-4 w-4" />
+                </Button>
+                <a
+                  href="#workflow"
+                  className="inline-flex h-11 items-center gap-1.5 rounded-md border border-border/70 bg-surface/30 px-4 text-sm font-medium text-muted-foreground transition hover:border-primary/35 hover:text-foreground"
+                >
+                  See how it works
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-[11px]">
+                {['Free to start', '5 briefs free', 'Demo billing only', 'No real cards processed'].map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-full border border-border/65 bg-surface-elev/45 px-2.5 py-1 font-mono uppercase tracking-wider text-muted-foreground"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
-            <p className="mt-3 text-xs text-muted-foreground">
-              Free to start · 5 briefs free · Demo billing only
-            </p>
+
+            <HeroPreview />
           </div>
 
-          {/* Hero brief preview */}
-          <HeroPreview />
-        </div>
-      </section>
+          <div className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+            <div className="rounded-2xl border border-border/50 bg-surface/25 px-4 py-3.5 backdrop-blur sm:px-6">
+              <p className="text-center text-[11px] uppercase tracking-[0.16em] text-muted-foreground/90">
+                Trusted by independent makers and small teams
+              </p>
+              <div className="mt-3 grid grid-cols-2 gap-2 text-center font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80 sm:grid-cols-3 lg:grid-cols-6">
+                {TRUSTED_NAMES.map((name) => (
+                  <span key={name} className="rounded-lg border border-border/35 bg-background/20 py-1.5">{name}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
-      {/* Problem */}
-      <section id="problem" className="border-t border-border/60 bg-surface-elev/30 py-20">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <div className="grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+        <section id="problem" className="border-t border-border/60 py-20 sm:py-24">
+          <div className="mx-auto grid max-w-6xl gap-9 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
             <div>
-              <p className="font-mono text-xs uppercase tracking-wider text-violet">The problem</p>
-              <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+              <p className="font-mono text-xs uppercase tracking-[0.16em] text-violet">The Problem</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl lg:text-[2.85rem]">
                 Vague requests are how scope creep starts.
               </h2>
-            </div>
-            <div className="space-y-5 text-muted-foreground">
-              <p>
-                You quote a project off a few paragraphs in an email. Three weeks in,
-                "just one more page" has become five, the design is being re-done,
-                and nobody can find the thing you both agreed to in the first place.
+              <p className="mt-5 max-w-2xl text-pretty text-muted-foreground">
+                You quote a project from a few paragraphs in an email. Three weeks later, "just one more page"
+                becomes five, the design is being re-done, and nobody can find what was agreed in the first place.
               </p>
-              <p className="text-foreground">
-                The fix isn't more meetings. It's writing the brief down — clearly,
-                visibly, with limits — before you start.
+              <p className="mt-4 max-w-2xl text-pretty text-foreground">
+                The fix isn't more meetings. It's writing the brief down - clearly, visibly, with limits - before you
+                start.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Workflow */}
-      <section id="workflow" className="border-t border-border/60 py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="max-w-2xl">
-            <p className="font-mono text-xs uppercase tracking-wider text-primary">Workflow</p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-              Three steps. One source of truth.
-            </h2>
-          </div>
-
-          <div className="mt-10 grid gap-4 lg:grid-cols-3">
-            {[
-              {
-                n: '01',
-                icon: ScanText,
-                t: 'Paste client notes',
-                d: 'Drop the email, the meeting transcript, the bullet list. We extract structure automatically.',
-              },
-              {
-                n: '02',
-                icon: Layers,
-                t: 'Shape the scope',
-                d: 'Refine deliverables, lock in exclusions, set a revision limit, sketch a timeline.',
-              },
-              {
-                n: '03',
-                icon: Send,
-                t: 'Send a clean brief',
-                d: 'Share a polished, client-facing document. Track approval status from one dashboard.',
-              },
-            ].map((step) => (
-              <div key={step.n} className="panel group relative overflow-hidden p-6 transition hover:border-primary/30">
-                <div className="flex items-center justify-between">
-                  <div className="font-mono text-xs uppercase tracking-wider text-primary">{step.n}</div>
-                  <step.icon className="h-4 w-4 text-muted-foreground transition group-hover:text-primary" />
-                </div>
-                <h3 className="mt-3 font-display text-xl font-semibold tracking-tight">{step.t}</h3>
-                <p className="mt-1.5 text-sm text-muted-foreground">{step.d}</p>
+            <div className="panel-elev relative overflow-hidden rounded-2xl border border-border/65 p-6 shadow-[0_22px_45px_-30px_hsl(var(--warning)/0.5)]">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_0%,hsl(var(--warning)/0.11),transparent_52%),radial-gradient(circle_at_100%_100%,hsl(var(--violet)/0.12),transparent_50%)]" />
+              <div className="relative">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-warning/90">Scope Creep Signals</p>
+                <ul className="mt-5 space-y-3.5 text-sm">
+                  {[
+                    'Can we just add...',
+                    'This should be quick',
+                    'We assumed that was included',
+                    'One more revision',
+                  ].map((signal) => (
+                    <li
+                      key={signal}
+                      className="flex items-center gap-2.5 rounded-xl border border-warning/20 bg-warning/10 px-3.5 py-2.5 text-warning/90 shadow-[0_8px_20px_-15px_hsl(var(--warning)/0.55)]"
+                    >
+                      <CircleAlert className="h-4 w-4 shrink-0" />
+                      <span>{signal}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features — editorial split layout */}
-      <section id="features" className="border-t border-border/60 bg-surface-elev/30 py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.6fr] lg:gap-16">
-            <div className="lg:sticky lg:top-24 lg:self-start">
-              <p className="font-mono text-xs uppercase tracking-wider text-violet">Features</p>
-              <h2 className="mt-2 font-display text-3xl font-semibold leading-[1.05] tracking-tight sm:text-4xl">
-                A document tool, not a dashboard.
-              </h2>
-              <p className="mt-4 text-sm text-muted-foreground">
-                Briefly is built around the artifact you're actually shipping — the brief.
-                Everything else gets out of the way.
-              </p>
-            </div>
-
-            <div className="space-y-px overflow-hidden rounded-xl border border-border/60 bg-surface-elev">
-              <FeatureRow
-                index="F.01"
-                icon={ScanText}
-                title="Notes parser"
-                description="Drop in raw text — Slack threads, transcripts, emails. The parser pulls out goals, deliverables, exclusions and assumptions deterministically. No AI surprises."
-                meta="Deterministic"
-              />
-              <FeatureRow
-                index="F.02"
-                icon={Layers}
-                title="Scope builder"
-                description="Deliverables, exclusions, assumptions, revision limits and timeline items live side-by-side in a single editor. Reorder freely, save when ready."
-                meta="Editor"
-              />
-              <FeatureRow
-                index="F.03"
-                icon={Printer}
-                title="Client-facing preview"
-                description="A typeset, printable document view. Send a link or print to PDF. Looks like something a studio would actually hand a client."
-                meta="Document"
-              />
-              <FeatureRow
-                index="F.04"
-                icon={GitBranch}
-                title="Approval lifecycle"
-                description="Draft → Sent → Needs changes → Approved. Every status change is tracked, and the dashboard surfaces what needs your attention."
-                meta="Status"
-              />
-              <FeatureRow
-                index="F.05"
-                icon={Command}
-                title="Command palette"
-                description="⌘K opens a palette to jump between briefs, create new ones, switch theme, or land in settings — without ever touching the sidebar."
-                meta="⌘K"
-              />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Comparison strip — before / after */}
-      <section className="border-t border-border/60 py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-10 flex items-end justify-between gap-6">
-            <div>
-              <p className="font-mono text-xs uppercase tracking-wider text-primary">Before / After</p>
-              <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-                The same project, two different conversations.
+        <section id="workflow" className="border-t border-border/60 bg-surface-elev/25 py-20 sm:py-24">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="max-w-3xl">
+              <p className="font-mono text-xs uppercase tracking-[0.16em] text-primary">Workflow</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+                Three steps. One source of truth.
               </h2>
             </div>
-            <div className="hidden text-right text-xs text-muted-foreground sm:block">
-              Same client. Same scope.<br />Very different outcomes.
+
+            <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {WORKFLOW_STEPS.map((step) => (
+                <article
+                  key={step.n}
+                  className="group relative overflow-hidden rounded-2xl border border-border/70 bg-background/45 p-6 transition duration-300 hover:-translate-y-1.5 hover:border-primary/55 hover:shadow-[0_20px_50px_-24px_hsl(var(--primary)/0.95)]"
+                >
+                  <div className="pointer-events-none absolute -right-1.5 -top-1.5 flex h-7 w-7 items-center justify-center rounded-bl-xl border border-primary/20 bg-primary/5 text-primary/55 opacity-70 transition-all duration-300 group-hover:border-primary/40 group-hover:bg-primary/10 group-hover:opacity-100">
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </div>
+                  <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.35),0_0_35px_-18px_hsl(var(--primary)/0.9)]" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary/85">{step.n}</span>
+                    <step.icon className="h-4.5 w-4.5 text-muted-foreground transition-colors duration-300 group-hover:text-primary" />
+                  </div>
+                  <h3 className="mt-5 font-display text-2xl font-semibold leading-tight tracking-tight">{step.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
+                </article>
+              ))}
             </div>
           </div>
+        </section>
 
-          <div className="grid gap-4 lg:grid-cols-2">
-            <ComparisonColumn
-              tone="bad"
-              label="Without a brief"
-              points={[
-                'Quote based on a 4-paragraph email',
-                '"Just one more page" appears in week 3',
-                'Revisions are unlimited in practice',
-                'Approval lives in someone\'s inbox',
-                'Final scope ≠ original quote',
-              ]}
-              footer="Margin disappears."
-            />
-            <ComparisonColumn
-              tone="good"
-              label="With a brief"
-              points={[
-                'Quote tied to a written, shared scope',
-                'New asks become a v2 — not free work',
-                'Revision limits are explicit (and visible)',
-                'One link, one canonical document',
-                'Final scope = approved scope',
-              ]}
-              footer="Margin stays."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing — editorial table layout */}
-      <section id="pricing" className="border-t border-border/60 bg-surface-elev/30 py-24">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-end">
-            <div>
-              <p className="font-mono text-xs uppercase tracking-wider text-primary">Pricing</p>
-              <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-                One free tier. One paid tier. <span className="text-muted-foreground">No seat math.</span>
-              </h2>
-            </div>
-            <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-              Demo billing · No real cards processed
-            </p>
-          </div>
-
-          <div className="mt-12 overflow-hidden rounded-2xl border border-border/60">
-            <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1.3fr_1.3fr]">
-              {/* Row header column */}
-              <div className="hidden border-r border-border/60 bg-background/40 md:block">
-                <div className="flex h-[120px] items-end p-6">
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                    What you get
-                  </span>
-                </div>
-                <PricingFeatureLabel>Briefs</PricingFeatureLabel>
-                <PricingFeatureLabel>Notes parser</PricingFeatureLabel>
-                <PricingFeatureLabel>Client preview</PricingFeatureLabel>
-                <PricingFeatureLabel>Watermark</PricingFeatureLabel>
-                <PricingFeatureLabel>Approval lifecycle</PricingFeatureLabel>
-                <PricingFeatureLabel>Command palette</PricingFeatureLabel>
-                <PricingFeatureLabel last>Theme</PricingFeatureLabel>
+        <section id="features" className="border-t border-border/60 py-20 sm:py-24">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="grid gap-10 lg:grid-cols-[0.95fr_1.2fr]">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.16em] text-violet">Capabilities</p>
+                <h2 className="mt-3 font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+                  A document tool, not another dashboard.
+                </h2>
+                <p className="mt-4 max-w-md text-pretty text-muted-foreground">
+                  Briefly is built around the artifact you actually ship - the brief. Everything else stays out of the
+                  way.
+                </p>
               </div>
 
-              <PlanColumn
+              <div className="grid gap-4 sm:grid-cols-2">
+                {FEATURE_ROWS.map((feature) => (
+                  <article
+                    key={feature.title}
+                    className="group rounded-2xl border border-border/70 bg-surface/55 p-5 transition duration-300 hover:border-primary/50 hover:bg-surface/75 hover:shadow-[0_14px_40px_-18px_hsl(var(--primary)/0.7)]"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-md border border-border/60 bg-background/55">
+                        <feature.icon className="h-4 w-4 text-primary" />
+                      </div>
+                      <span className="rounded-full border border-border/70 bg-background/55 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                        {feature.meta}
+                      </span>
+                    </div>
+                    <h3 className="mt-4 font-display text-[1.28rem] font-semibold tracking-tight">{feature.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{feature.description}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-border/60 bg-surface-elev/25 py-20 sm:py-24">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="mb-10">
+              <p className="font-mono text-xs uppercase tracking-[0.16em] text-primary">Before / After</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+                The same project. Two different conversations.
+              </h2>
+            </div>
+
+            <div className="grid gap-5 lg:grid-cols-2">
+              <ComparisonCard
+                tone="bad"
+                title="Without a brief"
+                points={[
+                  'Quote based on a 4-paragraph email',
+                  'Just one more page appears in week 3',
+                  'Revisions are unlimited in practice',
+                  'Approval lives in someone\'s inbox',
+                  'Final scope != original quote',
+                ]}
+                footer="Margin disappears."
+              />
+              <ComparisonCard
+                tone="good"
+                title="With Briefly"
+                points={[
+                  'Quote tied to a written, shared scope',
+                  'New asks become a v2 - not free work',
+                  'Revision limits are explicit and visible',
+                  'One link, one canonical document',
+                  'Final scope = approved scope',
+                ]}
+                footer="Margin stays."
+              />
+            </div>
+          </div>
+        </section>
+
+        <section id="pricing" className="border-t border-border/60 py-20 sm:py-24">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.16em] text-primary">Pricing</p>
+                <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+                  One free tier. One paid tier. No seat math.
+                </h2>
+              </div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+                Demo billing - No real cards processed
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-4 md:grid-cols-2">
+              <PricingCard
                 name="Free"
                 price="$0"
                 cadence="forever"
@@ -315,17 +388,17 @@ export default function Index() {
                 ctaTo={ctaTo}
                 ctaVariant="outline"
                 values={[
-                  'Up to 5',
-                  'Included',
-                  'Included',
-                  'Visible',
-                  'Included',
-                  'Included',
-                  'Light & dark',
+                  'Up to 5 briefs',
+                  'Notes parser included',
+                  'Client preview included',
+                  'Watermark visible',
+                  'Approval lifecycle included',
+                  'Command palette included',
+                  'Light and dark theme',
                 ]}
               />
 
-              <PlanColumn
+              <PricingCard
                 name="Pro"
                 price="$19"
                 cadence="per month"
@@ -333,102 +406,137 @@ export default function Index() {
                 ctaLabel="Get Pro"
                 ctaTo={ctaTo}
                 ctaVariant="default"
-                highlighted
+                recommended
                 values={[
-                  'Unlimited',
-                  'Included',
-                  'Included',
-                  'Removed',
-                  'Included',
-                  'Included',
-                  'Light & dark',
+                  'Unlimited briefs',
+                  'Notes parser included',
+                  'Client preview included',
+                  'Watermark removed',
+                  'Approval lifecycle included',
+                  'Command palette included',
+                  'Light and dark theme',
                 ]}
               />
             </div>
-          </div>
 
-          <p className="mt-6 text-center text-xs text-muted-foreground">
-            Plans persist per account. Cancel anytime — you'll drop to Free at the end of the demo period.
-          </p>
-        </div>
-      </section>
-
-      {/* CTA — final document panel */}
-      <section className="relative overflow-hidden border-t border-border/60 py-24">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" aria-hidden />
-        <div className="absolute -bottom-32 left-1/2 h-[320px] w-[700px] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" aria-hidden />
-
-        <div className="relative mx-auto max-w-4xl px-4 sm:px-6">
-          <div className="paper rounded-xl p-8 sm:p-12">
-            <div className="flex items-center justify-between border-b border-black/10 pb-4">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-black/50">
-                Brief · Final
-              </p>
-              <span className="rounded-full border border-status-approved/40 bg-status-approved/15 px-2 py-0.5 text-[10px] font-medium text-status-approved">
-                ● Ready to send
-              </span>
-            </div>
-            <h2 className="mt-6 font-display text-3xl font-semibold tracking-tight text-black sm:text-4xl">
-              Stop quoting off vibes.<br />
-              <span className="text-black/50">Start quoting off briefs.</span>
-            </h2>
-            <p className="mt-4 max-w-xl text-sm text-black/70 sm:text-base">
-              Five minutes to set up. One paste away from clarity.
-              Free to start, no card needed, your data stays scoped to your account.
+            <p className="mt-6 text-center text-xs text-muted-foreground">
+              Plans persist per account. Cancel anytime - you will drop to Free at the end of the demo period.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button size="lg" onClick={() => navigate(ctaTo)} className="h-11 px-5">
-                {user ? 'Open dashboard' : 'Start your first brief'}
-                <ArrowRight className="ml-1.5 h-4 w-4" />
-              </Button>
-              <span className="font-mono text-[11px] uppercase tracking-wider text-black/40">
-                Approval requested · Sign here ↘
-              </span>
+          </div>
+        </section>
+
+        <section className="border-t border-border/60 py-16 sm:py-18">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="rounded-2xl border border-border/60 bg-surface/30 p-5 shadow-[0_20px_50px_-30px_hsl(var(--primary)/0.75)] backdrop-blur sm:p-7">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-primary">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary pulse-dot" />
+                Built as a portfolio-grade SaaS case study
+              </div>
+
+              <div className="grid gap-5 lg:grid-cols-[1.2fr_1fr]">
+                <article className="rounded-2xl border border-border/65 bg-background/45 p-5 shadow-[0_14px_35px_-24px_hsl(var(--primary)/0.8)]">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-violet">Why I built Briefly</p>
+                  <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight sm:text-[2rem]">Why I built Briefly</h3>
+                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]">
+                    I built Briefly around a real freelance problem: clients rarely describe scope clearly at the
+                    start, but small unclear details become expensive later.
+                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]">
+                    The goal was to create a focused product that turns scattered client input into a written,
+                    approval-ready brief before work begins - with deliverables, exclusions, revision limits, and
+                    timeline visible from day one.
+                  </p>
+                </article>
+
+                <div className="grid gap-4">
+                  <article className="rounded-2xl border border-border/65 bg-background/45 p-5 shadow-[0_14px_35px_-24px_hsl(var(--violet)/0.7)]">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-primary">Product decisions</p>
+                    <ul className="mt-3 space-y-2.5 text-sm">
+                      {[
+                        'Document-first, not dashboard-heavy',
+                        'Scope limits visible before work starts',
+                        'Approval states for final client sign-off',
+                        'Demo billing only - no real cards processed',
+                        'Built for freelancers and small studios',
+                      ].map((item) => (
+                        <li key={item} className="flex items-start gap-2 text-muted-foreground">
+                          <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+
+                  <article className="rounded-2xl border border-border/65 bg-background/45 p-5">
+                    <p className="font-display text-xl font-semibold tracking-tight">Built by Dimitrije Bukejlovic</p>
+                    <p className="mt-1 text-sm text-muted-foreground">Full Stack Engineer</p>
+                    <div className="mt-4 space-y-2 text-sm">
+                      <p className="text-muted-foreground">
+                        Portfolio:{' '}
+                        <a
+                          href="https://dimitrije-web.vercel.app/"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-primary transition hover:text-primary-glow"
+                        >
+                          https://dimitrije-web.vercel.app/
+                        </a>
+                      </p>
+                      <p className="text-muted-foreground">
+                        Email:{' '}
+                        <a href="mailto:dimibukejlovic@gmail.com" className="text-primary transition hover:text-primary-glow">
+                          dimibukejlovic@gmail.com
+                        </a>
+                      </p>
+                    </div>
+                  </article>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* Footer — editorial column footer */}
-      <footer className="border-t border-border/60 bg-background">
+      <footer className="relative z-10 border-t border-border/60 bg-background/90">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-          <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.35fr_1fr_1fr_1fr]">
             <div>
-              <Link to="/" className="flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-md gradient-brand">
-                  <FileSignature className="h-4 w-4 text-primary-foreground" strokeWidth={2.4} />
+              <Link to="/" className="flex items-center gap-2.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-md gradient-brand shadow-[0_0_0_1px_hsl(var(--primary)/0.35),0_10px_35px_-15px_hsl(var(--primary)/0.75)]">
+                  <FileSignature className="h-4.5 w-4.5 text-primary-foreground" strokeWidth={2.4} />
                 </div>
                 <span className="font-display text-lg font-semibold tracking-tight">Briefly</span>
               </Link>
-              <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-                A brief builder for freelancers and small studios.
-                Turn the messy request into the document you both sign off on.
+
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+                Turn scattered client messages into structured briefs your team and client can actually approve.
               </p>
-              <div className="mt-6 flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-status-approved pulse-dot" />
-                <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Portfolio build · Demo billing only
-                </span>
-              </div>
+              <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                Built for freelancers and small studios
+              </p>
+              <p className="mt-2 text-xs text-muted-foreground">Demo billing only - No real cards processed</p>
             </div>
 
             <FooterColumn
-              label="Product"
+              heading="Product"
               links={[
-                { label: 'Features', href: '#features' },
+                { label: 'Problem', href: '#problem' },
                 { label: 'Workflow', href: '#workflow' },
+                { label: 'Capabilities', href: '#features' },
                 { label: 'Pricing', href: '#pricing' },
               ]}
             />
+
             <FooterColumn
-              label="Account"
+              heading="Account"
               links={[
                 { label: user ? 'Open app' : 'Sign in', href: user ? '/app' : '/auth', internal: true },
                 { label: user ? 'Dashboard' : 'Get started', href: user ? '/app' : '/auth', internal: true },
               ]}
             />
+
             <FooterColumn
-              label="Built with"
+              heading="Built with"
               links={[
                 { label: 'React + Vite', href: 'https://vitejs.dev', external: true },
                 { label: 'Tailwind CSS', href: 'https://tailwindcss.com', external: true },
@@ -437,10 +545,8 @@ export default function Index() {
             />
           </div>
 
-          <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
-            <p className="font-mono uppercase tracking-wider">
-              © {new Date().getFullYear()} Briefly · v0.1
-            </p>
+          <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
+            <p className="font-mono uppercase tracking-[0.15em]">(c) {new Date().getFullYear()} Briefly - v0.1</p>
             <p>Crafted as a portfolio piece. Not affiliated with any real billing provider.</p>
           </div>
         </div>
@@ -449,101 +555,171 @@ export default function Index() {
   );
 }
 
-function FeatureRow({
-  index, icon: Icon, title, description, meta,
-}: {
-  index: string;
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  description: string;
-  meta: string;
-}) {
+function HeroPreview() {
   return (
-    <div className="group grid grid-cols-[auto_1fr_auto] items-start gap-5 bg-surface-elev p-6 transition hover:bg-surface-elev/60 sm:gap-8 sm:p-7">
-      <div className="flex flex-col items-start gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{index}</span>
-        <Icon className="h-5 w-5 text-primary" />
+    <div className="relative lg:pl-3">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 blur-[105px]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-40 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[linear-gradient(90deg,hsl(var(--primary)/0.26),hsl(var(--violet)/0.2))] blur-[70px]" />
+      <div className="relative grid gap-3 sm:grid-cols-[1.05fr_auto_1.12fr] sm:items-center">
+        <span className="pointer-events-none absolute -left-2 top-12 hidden rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-primary/85 md:block">
+          Scope locked
+        </span>
+        <span className="pointer-events-none absolute left-[43%] -top-3 hidden rounded-full border border-violet/25 bg-violet/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-violet/90 md:block">
+          2 revisions included
+        </span>
+        <span className="pointer-events-none absolute right-[16%] -bottom-4 hidden rounded-full border border-status-approved/35 bg-status-approved/12 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-status-approved md:block">
+          Client approved
+        </span>
+        <span className="pointer-events-none absolute -right-2 top-[58%] hidden rounded-full border border-warning/35 bg-warning/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-warning md:block">
+          v2 request detected
+        </span>
+        <div className="absolute -left-1 top-1 hidden -translate-x-full rounded-full border border-border/70 bg-background/50 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground lg:block">
+          From scattered
+        </div>
+        <div className="absolute -right-1 top-1 hidden translate-x-full rounded-full border border-primary/35 bg-primary/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-primary lg:block">
+          Ready for approval
+        </div>
+
+        <article className="rounded-2xl border border-border/65 bg-surface/70 p-5 shadow-[0_22px_55px_-28px_hsl(0_0%_0%/0.9)] backdrop-blur">
+          <div className="mb-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+            <span className="h-1.5 w-1.5 rounded-full bg-warning" />
+            Raw client message
+          </div>
+          <p className="text-[12px] leading-relaxed text-muted-foreground">
+            We should probably update the homepage first, and maybe the pricing section too. We are
+            assuming your team can also handle the CMS migration. This quote is not including custom
+            illustrations right now. After launch, we might need one more page for case studies.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-1.5 font-mono text-[9px] uppercase tracking-[0.12em]">
+            {['probably', 'maybe', 'not including', 'assuming', 'one more page'].map((word) => (
+              <span key={word} className="rounded-full border border-warning/35 bg-warning/10 px-2 py-0.5 text-warning">
+                {word}
+              </span>
+            ))}
+          </div>
+        </article>
+
+        <div className="relative hidden items-center justify-center sm:flex">
+          <span className="absolute -top-5 rounded-full border border-primary/25 bg-primary/10 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-primary">
+            To structured
+          </span>
+          <div className="h-0.5 w-10 bg-gradient-to-r from-primary via-violet to-primary" />
+          <ArrowRight className="-ml-2 h-4 w-4 text-primary" />
+        </div>
+
+        <article className="paper relative rounded-2xl border border-black/10 p-6 shadow-[0_30px_65px_-28px_hsl(var(--primary)/0.95)]">
+          <div className="mb-3 flex items-start justify-between gap-3 border-b border-black/10 pb-3">
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-black/45">Approved brief</p>
+              <h3 className="font-display text-base font-semibold tracking-tight text-black">Studio relaunch scope</h3>
+            </div>
+            <span className="inline-flex items-center gap-1 rounded-full border border-status-approved/45 bg-status-approved/15 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-status-approved">
+              <BadgeCheck className="h-3 w-3" />
+              Approved
+            </span>
+          </div>
+
+          <div className="space-y-3 text-[11px] leading-snug text-black/80">
+            <DocSection label="Deliverables">
+              <li>Homepage redesign + pricing section</li>
+              <li>Responsive implementation</li>
+              <li>Client-ready handoff brief</li>
+            </DocSection>
+            <DocSection label="Out of scope">
+              <li>CMS migration</li>
+              <li>Custom illustration set</li>
+            </DocSection>
+            <DocSection label="Timeline">
+              <li>Week 1: scope lock + direction</li>
+              <li>Week 2: design and build</li>
+              <li>Week 3: review + launch</li>
+            </DocSection>
+            <DocSection label="Revision limit">
+              <li>Two revision rounds included</li>
+            </DocSection>
+          </div>
+          <div className="mt-3 border-t border-black/10 pt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-black/45">
+            Briefly - canonical scope document
+          </div>
+        </article>
       </div>
-      <div>
-        <h3 className="font-display text-lg font-semibold tracking-tight">{title}</h3>
-        <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{description}</p>
-      </div>
-      <span className="hidden self-center rounded-full border border-border bg-background/60 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground sm:inline-block">
-        {meta}
-      </span>
     </div>
   );
 }
 
-function ComparisonColumn({
-  tone, label, points, footer,
+function DocSection({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <section>
+      <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.13em] text-black/45">{label}</p>
+      <ul className="ml-3 list-disc space-y-1">{children}</ul>
+    </section>
+  );
+}
+
+function ComparisonCard({
+  tone,
+  title,
+  points,
+  footer,
 }: {
   tone: 'good' | 'bad';
-  label: string;
+  title: string;
   points: string[];
   footer: string;
 }) {
-  const isGood = tone === 'good';
+  const good = tone === 'good';
+
   return (
-    <div
+    <article
       className={
-        isGood
-          ? 'panel relative overflow-hidden border-primary/30 p-7'
-          : 'rounded-xl border border-dashed border-border bg-surface-elev/40 p-7'
+        good
+          ? 'relative overflow-hidden rounded-2xl border border-primary/40 bg-[linear-gradient(150deg,hsl(var(--surface))_10%,hsl(var(--primary)/0.12)_130%)] p-6 shadow-[0_20px_55px_-26px_hsl(var(--primary)/0.95)]'
+          : 'rounded-2xl border border-border/70 bg-background/55 p-6'
       }
     >
-      <div className="flex items-center justify-between">
-        <span
-          className={`font-mono text-[10px] uppercase tracking-wider ${
-            isGood ? 'text-primary' : 'text-muted-foreground'
-          }`}
-        >
-          {label}
-        </span>
-        {isGood && <Sparkles className="h-4 w-4 text-primary" />}
+      {good && (
+        <div className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-violet/30 blur-3xl" />
+      )}
+
+      <div className="relative flex items-center justify-between">
+        <h3 className="font-display text-2xl font-semibold tracking-tight">{title}</h3>
+        {good ? <ShieldCheck className="h-5 w-5 text-primary" /> : <Clock3 className="h-5 w-5 text-muted-foreground" />}
       </div>
-      <ul className="mt-5 space-y-3 text-sm">
-        {points.map((p) => (
-          <li key={p} className="flex items-start gap-2.5">
-            {isGood ? (
-              <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+
+      <ul className="relative mt-5 space-y-3 text-sm">
+        {points.map((point) => (
+          <li key={point} className="flex items-start gap-2.5">
+            {good ? (
+              <Check className="mt-[2px] h-4 w-4 shrink-0 text-primary" />
             ) : (
-              <Minus className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+              <Minus className="mt-[2px] h-4 w-4 shrink-0 text-muted-foreground" />
             )}
-            <span className={isGood ? 'text-foreground' : 'text-muted-foreground'}>{p}</span>
+            <span className={good ? 'text-foreground' : 'text-muted-foreground'}>{point}</span>
           </li>
         ))}
       </ul>
+
       <p
-        className={`mt-6 border-t pt-4 font-display text-base ${
-          isGood ? 'border-primary/20 text-foreground' : 'border-border text-muted-foreground'
+        className={`relative mt-6 border-t pt-4 font-display text-lg ${
+          good ? 'border-primary/30 text-primary' : 'border-border/80 text-muted-foreground'
         }`}
       >
         {footer}
       </p>
-    </div>
+    </article>
   );
 }
 
-function PricingFeatureLabel({
-  children, last,
-}: {
-  children: React.ReactNode;
-  last?: boolean;
-}) {
-  return (
-    <div
-      className={`flex h-14 items-center px-6 text-sm text-muted-foreground ${
-        last ? '' : 'border-b border-border/60'
-      }`}
-    >
-      {children}
-    </div>
-  );
-}
-
-function PlanColumn({
-  name, price, cadence, description, values, ctaLabel, ctaTo, ctaVariant, highlighted,
+function PricingCard({
+  name,
+  price,
+  cadence,
+  description,
+  values,
+  ctaLabel,
+  ctaTo,
+  ctaVariant,
+  recommended,
 }: {
   name: string;
   price: string;
@@ -553,106 +729,83 @@ function PlanColumn({
   ctaLabel: string;
   ctaTo: string;
   ctaVariant: 'default' | 'outline';
-  highlighted?: boolean;
+  recommended?: boolean;
 }) {
   return (
-    <div
-      className={`relative flex flex-col border-border/60 ${
-        highlighted ? 'bg-gradient-to-b from-primary/5 to-transparent' : ''
-      } md:border-l`}
+    <article
+      className={`relative rounded-2xl border p-6 ${
+        recommended
+          ? 'border-primary/45 bg-[linear-gradient(165deg,hsl(var(--surface))_5%,hsl(var(--primary)/0.16)_150%)] shadow-[0_25px_65px_-30px_hsl(var(--primary)/1)]'
+          : 'border-border/70 bg-surface/45'
+      }`}
     >
-      {highlighted && (
-        <div className="absolute right-5 top-5">
-          <Badge className="bg-primary/15 font-mono text-[10px] uppercase tracking-wider text-primary hover:bg-primary/15">
-            Recommended
-          </Badge>
-        </div>
+      {recommended && (
+        <Badge className="absolute right-5 top-5 bg-primary/18 font-mono text-[10px] uppercase tracking-[0.14em] text-primary hover:bg-primary/18">
+          Recommended
+        </Badge>
       )}
 
-      <div className="flex h-[120px] flex-col justify-end gap-1 p-6">
-        <h3 className="font-display text-2xl font-semibold tracking-tight">{name}</h3>
-        <p className="text-xs text-muted-foreground">{description}</p>
+      <div className="pr-24">
+        <h3 className="font-display text-[2rem] font-semibold tracking-tight">{name}</h3>
+        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       </div>
 
-      <div className="border-y border-border/60 px-6 py-4">
-        <div className="flex items-baseline gap-1.5">
-          <span className="font-display text-3xl font-semibold tracking-tight">{price}</span>
-          <span className="text-xs text-muted-foreground">{cadence}</span>
-        </div>
+      <div className="mt-4 flex items-baseline gap-2 border-b border-border/70 pb-5">
+        <span className="font-display text-4xl font-semibold leading-none tracking-tight">{price}</span>
+        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">{cadence}</span>
       </div>
 
-      <div className="md:hidden">
-        <div className="px-6 py-4">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-            What you get
-          </p>
-          <ul className="space-y-2 text-sm">
-            {['Briefs', 'Notes parser', 'Client preview', 'Watermark', 'Approval lifecycle', 'Command palette', 'Theme'].map(
-              (label, i) => (
-                <li key={label} className="flex items-baseline justify-between gap-3">
-                  <span className="text-muted-foreground">{label}</span>
-                  <span className="text-right font-medium">{values[i]}</span>
-                </li>
-              ),
-            )}
-          </ul>
-        </div>
-      </div>
-
-      <div className="hidden md:block">
-        {values.map((v, i) => (
-          <div
-            key={i}
-            className={`flex h-14 items-center px-6 text-sm font-medium ${
-              i === values.length - 1 ? '' : 'border-b border-border/60'
-            }`}
-          >
-            {v}
-          </div>
+      <ul className="mt-5 space-y-2.5 text-sm">
+        {values.map((value) => (
+          <li key={value} className="flex items-start gap-2">
+            <Dot className="h-4 w-4 shrink-0 text-primary" />
+            <span>{value}</span>
+          </li>
         ))}
-      </div>
+      </ul>
 
-      <div className="mt-auto p-6">
-        <Button asChild className="w-full" variant={ctaVariant} size="lg">
+      <div className="mt-6">
+        <Button asChild className="h-11 w-full" variant={ctaVariant} size="lg">
           <Link to={ctaTo}>
             {ctaLabel}
             <ArrowRight className="ml-1.5 h-4 w-4" />
           </Link>
         </Button>
       </div>
-    </div>
+    </article>
   );
 }
 
 function FooterColumn({
-  label, links,
+  heading,
+  links,
 }: {
-  label: string;
+  heading: string;
   links: Array<{ label: string; href: string; internal?: boolean; external?: boolean }>;
 }) {
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{heading}</p>
       <ul className="mt-4 space-y-2.5 text-sm">
-        {links.map((l) => (
-          <li key={l.label}>
-            {l.internal ? (
-              <Link to={l.href} className="text-foreground/80 transition hover:text-foreground">
-                {l.label}
+        {links.map((link) => (
+          <li key={link.label}>
+            {link.internal ? (
+              <Link to={link.href} className="text-foreground/85 transition hover:text-foreground">
+                {link.label}
               </Link>
-            ) : l.external ? (
+            ) : link.external ? (
               <a
-                href={l.href}
+                href={link.href}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1 text-foreground/80 transition hover:text-foreground"
+                className="inline-flex items-center gap-1 text-foreground/85 transition hover:text-foreground"
               >
-                {l.label}
+                {link.label}
                 <ArrowUpRight className="h-3 w-3" />
               </a>
             ) : (
-              <a href={l.href} className="text-foreground/80 transition hover:text-foreground">
-                {l.label}
+              <a href={link.href} className="text-foreground/85 transition hover:text-foreground">
+                {link.label}
               </a>
             )}
           </li>
@@ -661,68 +814,3 @@ function FooterColumn({
     </div>
   );
 }
-
-function HeroPreview() {
-  return (
-    <div className="relative">
-      <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-primary/20 to-violet/20 blur-2xl" aria-hidden />
-      <div className="relative grid gap-3 sm:grid-cols-[1fr_1.15fr]">
-        {/* Raw notes */}
-        <div className="panel p-4 font-mono text-[11px] leading-relaxed text-muted-foreground">
-          <div className="mb-2 flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-status-changes" />
-            <span className="text-[10px] uppercase tracking-wider">Raw email</span>
-          </div>
-          <p>
-            Hey — we need a new landing page for the Q3 launch. Should feel modern,
-            video header probably. We want a pricing section, FAQ, maybe a blog later.
-            <span className="text-status-changes"> Not including</span> any custom illustrations.
-            <span className="text-status-changes"> Assuming</span> the copy comes from us.
-            Need it live by end of August.
-          </p>
-        </div>
-        {/* Structured brief */}
-        <div className="paper anim-in relative rounded-md p-5">
-          <div className="flex items-center justify-between border-b border-black/10 pb-3">
-            <div>
-              <p className="font-mono text-[9px] uppercase tracking-wider text-black/50">Brief</p>
-              <h3 className="font-display text-base font-semibold leading-tight">Acme — Q3 launch landing</h3>
-            </div>
-            <span className="rounded-full border border-status-approved/40 bg-status-approved/15 px-2 py-0.5 text-[9px] font-medium text-status-approved">
-              ● Approved
-            </span>
-          </div>
-          <div className="mt-3 space-y-2.5 text-[11px] leading-snug text-black/80">
-            <Section label="Deliverables">
-              <li>Single-page Q3 launch landing</li>
-              <li>Video header + pricing + FAQ</li>
-              <li>Responsive mobile layout</li>
-            </Section>
-            <Section label="Out of scope">
-              <li className="text-black/60">Custom illustrations</li>
-              <li className="text-black/60">Blog system (Phase 2)</li>
-            </Section>
-            <Section label="Timeline">
-              <li>Aug 12 — design draft</li>
-              <li>Aug 24 — build complete</li>
-              <li>Aug 31 — launch</li>
-            </Section>
-          </div>
-          <div className="mt-3 border-t border-black/10 pt-2 text-[9px] uppercase tracking-wider text-black/40">
-            briefly · revision 2 of 3
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Section({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <p className="mb-1 font-mono text-[8px] uppercase tracking-wider text-black/40">{label}</p>
-      <ul className="ml-3.5 list-disc space-y-0.5">{children}</ul>
-    </div>
-  );
-}
-
